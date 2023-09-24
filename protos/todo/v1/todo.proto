@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package protos.todo.v1;
+
+option go_package = "github.com/yosuke7040/go-todo-grpc/gen/protos/todo/v1;todov1";
+
+enum Status {
+  UNSPECIFIED = 0;
+  DOING = 1;
+  DONE = 2;
+}
+
+
+service TodoService {
+  rpc Create(CreateRequest) returns (CreateResponse) {}
+  rpc Read(ReadRequest) returns (ReadResponse) {}
+  rpc Update(UpdateRequest) returns (UpdateResponse) {}
+  rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+  rpc List(ListRequest) returns (ListResponse) {}
+}
+
+// NOTE:
+// https://maku.blog/p/sp9q7o5/
+// ＞ データを wire 形式にシリアライズするときに、デフォルト値を保存しない
+// ＞ データの受信側では、フィールドに対応する値が入っていなければ、デフォルト値がセットされているものとして振る舞う
+// つまり、Statusの初期値は0だから、クライアントには表示されないので0でセットされていると判断する
+message Todo {
+  int32 id = 1;
+  string title = 2; 
+  Status status = 3;
+}
+
+message CreateRequest {
+  string title = 1;  
+}
+message CreateResponse {
+  Todo todo = 1;
+}
+
+message ReadRequest {
+  int32 id = 1;
+}
+message ReadResponse {
+  Todo todo = 1;
+}
+
+message UpdateRequest {
+  int32 id = 1;
+  bool status = 2;
+}
+message UpdateResponse {
+  Todo todo = 1;
+}
+
+message DeleteRequest {
+  int32 id = 1;
+}
+message DeleteResponse {}
+
+message ListRequest {}
+message ListResponse {
+  repeated Todo todos = 1;
+}
