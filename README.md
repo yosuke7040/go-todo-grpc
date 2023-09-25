@@ -35,3 +35,5 @@ show service
 ```
 
 シナリオテスト <https://github.com/zoncoen/scenarigo>
+
+TODO: .devcontainer便利そう。忘れないようにとりあえず入れてるだけ
