@@ -2,7 +2,6 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"time"
 
@@ -34,6 +33,5 @@ func (d *DBClients) ConnectDB() (*sql.DB, error) {
 	}
 
 	db, err := sql.Open("mysql", c.FormatDSN())
-	fmt.Println("-- clients --- db ping: ", db.Ping())
 	return db, err
 }

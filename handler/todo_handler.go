@@ -23,13 +23,11 @@ func (h *TodoHander) Create(
 	req *connect.Request[todov1.CreateRequest],
 ) (*connect.Response[todov1.CreateResponse], error) {
 	log.Println("Request headers: ", req.Header())
-	res := connect.NewResponse(&todov1.CreateResponse{
-		Todo: &todov1.Todo{
-			Id:     1,
-			Title:  "test1",
-			Status: todov1.Status_DOING,
-		},
-	})
+	err := h.ser.CreateTodo(ctx, req.Msg.Title)
+	if err != nil {
+		return nil, err
+	}
+	res := connect.NewResponse(&todov1.CreateResponse{})
 	res.Header().Set("Todo-Version", "v1")
 	return res, nil
 }
@@ -39,11 +37,17 @@ func (h *TodoHander) Read(
 	req *connect.Request[todov1.ReadRequest],
 ) (*connect.Response[todov1.ReadResponse], error) {
 	log.Println("Request headers: ", req.Header())
+	todo, err := h.ser.GetTodo(ctx, req.Msg.Id)
+	if err != nil {
+		log.Printf("Read error: %v", err)
+		return nil, err
+	}
+
 	res := connect.NewResponse(&todov1.ReadResponse{
 		Todo: &todov1.Todo{
-			Id:     2,
-			Title:  "test2",
-			Status: todov1.Status_DOING,
+			Id:     todo.Id,
+			Title:  todo.Title,
+			Status: todov1.Status(todo.Status),
 		},
 	})
 	res.Header().Set("Todo-Version", "v1")
@@ -55,13 +59,11 @@ func (h *TodoHander) Update(
 	req *connect.Request[todov1.UpdateRequest],
 ) (*connect.Response[todov1.UpdateResponse], error) {
 	log.Println("Request headers: ", req.Header())
-	res := connect.NewResponse(&todov1.UpdateResponse{
-		Todo: &todov1.Todo{
-			Id:     3,
-			Title:  "test3",
-			Status: todov1.Status_DOING,
-		},
-	})
+	err := h.ser.UpdateTodo(ctx, req.Msg.Id, req.Msg.Title, int32(req.Msg.Status))
+	if err != nil {
+		return nil, err
+	}
+	res := connect.NewResponse(&todov1.UpdateResponse{})
 	res.Header().Set("Todo-Version", "v1")
 	return res, nil
 }

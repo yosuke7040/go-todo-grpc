@@ -10,6 +10,7 @@ import (
 
 type TodoRepoInterface interface {
 	SelectTodoList() ([]*models.Todo, error)
+	SelectTodo(int32) (*models.Todo, error)
 	InsertTodo(string) error
 	UpdateTodo(int32, string, int32) error
 	DeleteTodo(int32) error
@@ -26,7 +27,7 @@ func NewTodo(db *sql.DB) *Todo {
 
 // taskの一覧を取得する
 func (t *Todo) SelectTodoList() ([]*models.Todo, error) {
-	const sqlStr = `SELECT * FROM tasks`
+	const sqlStr = `SELECT id, title, status FROM todos`
 
 	rows, err := t.db.Query(sqlStr)
 	if err != nil {
@@ -48,9 +49,25 @@ func (t *Todo) SelectTodoList() ([]*models.Todo, error) {
 	return todos, nil
 }
 
+// 指定したIDのtaskを取得する
+func (t *Todo) SelectTodo(id int32) (*models.Todo, error) {
+	const sqlStr = `SELECT id, title, status FROM todos WHERE id = ?`
+	// NOTE: ↓の場合は、todoがnilのままになるのでScanできない
+	// var todo *models.Todo
+	todo := &models.Todo{}
+
+	err := t.db.QueryRow(sqlStr, id).Scan(&todo.Id, &todo.Title, &todo.Status)
+	if err != nil {
+		log.Printf("SelectTodoList error: %v", err)
+		return nil, err
+	}
+
+	return todo, nil
+}
+
 // taskを作成する
 func (t *Todo) InsertTodo(title string) error {
-	const sqlStr = `INSERT INTO todos (titile, status) VALUES (?, ?)`
+	const sqlStr = `INSERT INTO todos (title, status) VALUES (?, ?)`
 
 	_, err := t.db.Exec(sqlStr, title, models.TodoStatusUnspecified)
 	if err != nil {

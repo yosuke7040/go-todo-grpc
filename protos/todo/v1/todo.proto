@@ -5,9 +5,9 @@ package protos.todo.v1;
 option go_package = "github.com/yosuke7040/go-todo-grpc/gen/protos/todo/v1;todov1";
 
 enum Status {
-  UNSPECIFIED = 0;
-  DOING = 1;
-  DONE = 2;
+  STATUS_UNSPECIFIED = 0;
+  STATUS_DOING = 1;
+  STATUS_DONE = 2;
 }
 
 
@@ -46,7 +46,8 @@ message ReadResponse {
 
 message UpdateRequest {
   int32 id = 1;
-  bool status = 2;
+  string title = 2;
+  Status status = 3;
 }
 message UpdateResponse {
   Todo todo = 1;
@@ -55,9 +56,11 @@ message UpdateResponse {
 message DeleteRequest {
   int32 id = 1;
 }
-message DeleteResponse {}
+message DeleteResponse {
+}
 
-message ListRequest {}
+message ListRequest {
+}
 message ListResponse {
   repeated Todo todos = 1;
 }

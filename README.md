@@ -27,9 +27,10 @@ evans <https://github.com/ktr0731/evans>
 
 TODO: reflection導入
 
-```evans
+```bash
 evans --proto protos/todo/v1/todo.proto repl -p 8080
 call Create
+call --enrich Create
 
 show service
 ```
@@ -37,3 +38,13 @@ show service
 シナリオテスト <https://github.com/zoncoen/scenarigo>
 
 TODO: .devcontainer便利そう。忘れないようにとりあえず入れてるだけ
+
+migration
+
+```bash
+$ docker exec -it migrate sh
+
+--- in container ----
+$ migrate -path /app/sql/ -database "mysql://gogo:gogo@tcp(mysql:3306)/todo" up 1
+$ exit
+```
