@@ -6,7 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 
-	todov1 "github.com/yosuke7040/go-todo-grpc/gen/protos/todo/v1"
+	todov1 "github.com/yosuke7040/go-todo-grpc/gen/todo/v1"
 	"github.com/yosuke7040/go-todo-grpc/services"
 )
 
@@ -73,6 +73,11 @@ func (h *TodoHander) Delete(
 	req *connect.Request[todov1.DeleteRequest],
 ) (*connect.Response[todov1.DeleteResponse], error) {
 	log.Println("Request headers: ", req.Header())
+	err := h.ser.DeleteTodo(ctx, req.Msg.Id)
+	if err != nil {
+		return nil, err
+	}
+
 	res := connect.NewResponse(&todov1.DeleteResponse{})
 	res.Header().Set("Todo-Version", "v1")
 	return res, nil
@@ -85,7 +90,6 @@ func (h *TodoHander) List(
 	log.Println("Request headers: ", req.Header())
 	todos, err := h.ser.GetTodoList(ctx)
 	if err != nil {
-		log.Printf("List error: %v", err)
 		return nil, err
 	}
 

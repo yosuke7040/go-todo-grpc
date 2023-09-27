@@ -1,0 +1,29 @@
+title: シナリオテスト
+plugins:
+  grpc: todo.so
+vars:
+  client: "{{plugins.grpc.NewTodoServiceClient()}}"
+steps:
+  # - title: Todoを作成
+  #   protocol: gRPC
+  #   request:
+  #     client: "{{vars.client}}"
+  #     method: Create
+  #     body:
+  #       title: "scenairo test"
+  #   expect:
+  #     code: 0
+  #     body: {}
+  - title: idと一致したTodoを取得
+    protocol: gRPC
+    request:
+      client: "{{vars.client}}"
+      method: Read
+      body:
+        id: 1
+    expect:
+      code: 0
+      body:
+        id: 1
+        title: "test1"
+        status: 1

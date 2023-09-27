@@ -1,0 +1,18 @@
+schemaVersion: config/v1
+
+scenarios:
+  - scenarios
+
+pluginDirectory: ./gen
+plugins:
+  todo.so:
+    src: ./plugins
+
+output:
+  verbose: true # Enable verbose output.
+  # colored: false # Enable colored output with ANSI color escape codes. It is enabled by default but disabled when a NO_COLOR environment variable is set (regardless of its value).
+  # report:
+  #   json:
+  #     filename: ./report.json # Specify a filename for test report output in JSON.
+  #   junit:
+  #     filename: ./junit.xml   # Specify a filename for test report output in JUnit XML format.

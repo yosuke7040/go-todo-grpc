@@ -1,8 +1,10 @@
 syntax = "proto3";
 
-package protos.todo.v1;
+package todo.v1;
+option go_package = "github.com/yosuke7040/go-todo-grpc/gen/todo/v1;todov1";
 
-option go_package = "github.com/yosuke7040/go-todo-grpc/gen/protos/todo/v1;todov1";
+// package protos.todo.v1;
+// option go_package = "github.com/yosuke7040/go-todo-grpc/gen/protos/todo/v1;todov1";
 
 enum Status {
   STATUS_UNSPECIFIED = 0;

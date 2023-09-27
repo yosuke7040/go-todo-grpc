@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/rs/cors"
-	"github.com/yosuke7040/go-todo-grpc/gen/protos/todo/v1/todov1connect"
+	"github.com/yosuke7040/go-todo-grpc/gen/todo/v1/todov1connect"
 	"github.com/yosuke7040/go-todo-grpc/handler"
 	"github.com/yosuke7040/go-todo-grpc/internal/db"
 	"github.com/yosuke7040/go-todo-grpc/repositories"

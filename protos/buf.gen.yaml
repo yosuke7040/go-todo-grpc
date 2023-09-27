@@ -1,0 +1,19 @@
+version: v1
+plugins:
+  - plugin: go
+    out: ../gen
+    opt: paths=source_relative
+  # - plugin: go
+  #   out: ./scenarigo/plugins
+  #   opt: paths=source_relative
+  - plugin: connect-go
+    out: ../gen
+    opt: paths=source_relative
+  # - plugin: connect-go
+  #   out: ./scenarigo/plugins
+  #   opt: paths=source_relative
+  # TODO: ここの使い方がわからない。。
+  # for scenarigo test
+  - plugin: go-grpc
+    out: ../gen
+    opt: paths=source_relative
