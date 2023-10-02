@@ -4,16 +4,16 @@ plugins:
 vars:
   client: "{{plugins.grpc.NewTodoServiceClient()}}"
 steps:
-  # - title: Todoを作成
-  #   protocol: gRPC
-  #   request:
-  #     client: "{{vars.client}}"
-  #     method: Create
-  #     body:
-  #       title: "scenairo test"
-  #   expect:
-  #     code: 0
-  #     body: {}
+  - title: Todoを作成
+    protocol: gRPC
+    request:
+      client: "{{vars.client}}"
+      method: Create
+      body:
+        title: "scenairo test"
+    expect:
+      code: 0
+      body: {}
   - title: idと一致したTodoを取得
     protocol: gRPC
     request:
@@ -22,8 +22,43 @@ steps:
       body:
         id: 1
     expect:
-      code: 0
+      code: OK
       body:
-        id: 1
-        title: "test1"
-        status: 1
+        todo:
+          id: 1
+          title: "test1"
+  - title: idと一致したTodoを取得
+    protocol: gRPC
+    request:
+      client: "{{vars.client}}"
+      method: Update
+      body:
+        id: 5
+        title: "scenario test update"
+        status: 3
+    expect:
+      code: OK
+      body: {}
+  - title: idと一致したTodoを削除する
+    protocol: gRPC
+    request:
+      client: "{{vars.client}}"
+      method: Delete
+      body:
+        id: 10
+    expect:
+      code: OK
+      body: {}
+# - title: idと一致したTodoを取得
+#   protocol: gRPC
+#   request:
+#     client: "{{vars.client}}"
+#     method: List
+#     body:
+#       id: 1
+#   expect:
+#     code: OK
+#     body:
+#       todo:
+#         id: 1
+#         title: "test1"
