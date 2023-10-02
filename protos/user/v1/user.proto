@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package user.v1;
+option go_package = "github.com/yosuke7040/go-todo-grpc/gen/user/v1;userv1";
+
+service UserService {
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
+}
+
+message User {
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message GetUserRequest {
+  int32 id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+// message LoginRequest {
+//   string email = 1;
+//   string password = 2;
+// }
+
+// message LoginResponse {
+//   string id = 1;
+//   string email = 2;
+//   string token = 3;
+// }

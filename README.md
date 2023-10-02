@@ -4,6 +4,7 @@
 
 <https://github.com/connectrpc/examples-go>
 <https://connectrpc.com/docs/go/getting-started/>
+<https://zenn.dev/7oh/articles/3b944f9b744932>
 
 ディレクトリ構成
 <https://go.dev/doc/modules/layout>
@@ -21,11 +22,13 @@ grpcurl \
     -d '{"id": 1}' \
     localhost:8080 protos.todo.v1.TodoService/Read
 
+grpcurl -protoset <(buf build -o -) -plaintext -H  "Authorization: Bearer <token>" localhost:8080 todo.v1.TodoService/List
+
 ```
 
 evans <https://github.com/ktr0731/evans>
 
-TODO: reflection導入
+TODO: reflection 導入
 
 ```bash
 evans --proto protos/todo/v1/todo.proto repl -p 8080
@@ -37,7 +40,7 @@ show service
 
 シナリオテスト <https://github.com/zoncoen/scenarigo>
 
-TODO: .devcontainer便利そう。忘れないようにとりあえず入れてるだけ
+TODO: .devcontainer 便利そう。忘れないようにとりあえず入れてるだけ
 
 migration
 
@@ -46,5 +49,28 @@ $ docker exec -it migrate sh
 
 --- in container ----
 $ migrate -path /app/sql/ -database "mysql://gogo:gogo@tcp(mysql:3306)/todo" up 1
+$ migrate -path /app/sql/ -database "mysql://gogo:gogo@tcp(mysql:3306)/todo" down 1
 $ exit
 ```
+
+TODO: validation
+
+[https://zenn.dev/mattn/articles/893f28eff96129]
+
+TODO: error
+status code をエラーに合わせて変更できるようにする
+error.As,Is とか
+
+db
+
+```bash
+docker exec -it todo-db sh
+mysql -h 127.0.0.1 -u gogo todo -p
+```
+
+auth
+
+sample user
+
+- <email@example.com>
+- p@ssw0rd

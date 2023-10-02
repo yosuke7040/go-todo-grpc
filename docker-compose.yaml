@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 services:
   # api:
   #   container_name: api
@@ -18,29 +18,29 @@ services:
   #     - mysql
   mysql:
     image: mysql:8.0.33
-    ports: 
-        - "3306:3306"
+    ports:
+      - "3306:3306"
     container_name: todo-db
     # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
     # (this is just an example, not intended to be a production configuration)
-    command: 
-        - --default-authentication-plugin=mysql_native_password
-        - --character-set-server=utf8mb4
-        - --collation-server=utf8mb4_unicode_ci
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
     restart: always
     environment:
-        MYSQL_ROOT_USER: root
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: todo
-        MYSQL_USER: gogo
-        MYSQL_PASSWORD: gogo
-        TZ: 'Asia/Tokyo'
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: todo
+      MYSQL_USER: gogo
+      MYSQL_PASSWORD: gogo
+      TZ: "Asia/Tokyo"
     volumes:
-        - todo-db-volume:/var/lib/mysql
+      - todo-db-volume:/var/lib/mysql
   mygrate:
     container_name: migrate
     build:
-     context: ./build/migrations
+      context: ./build/migrations
     tty: true
     volumes:
       - type: bind
@@ -50,4 +50,3 @@ services:
       - mysql
 volumes:
   todo-db-volume:
-    

@@ -25,6 +25,8 @@ func (h *TodoHander) Create(
 	log.Println("Request headers: ", req.Header())
 	err := h.ser.CreateTodo(ctx, req.Msg.Title)
 	if err != nil {
+		// invalid title. UNKOWN errorを返す
+		err = connect.NewError(connect.CodeUnknown, err)
 		return nil, err
 	}
 	res := connect.NewResponse(&todov1.CreateResponse{})
@@ -39,8 +41,12 @@ func (h *TodoHander) Read(
 	log.Println("Request headers: ", req.Header())
 	todo, err := h.ser.GetTodo(ctx, req.Msg.Id)
 	if err != nil {
-		log.Printf("Read error: %v", err)
-		return nil, err
+		// TODO: エラー内容によって返すエラーを変える
+		// invalid id
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
+
+		// internal error
+		// return nil, connect.NewError(connect.CodeUnknown, err)
 	}
 
 	res := connect.NewResponse(&todov1.ReadResponse{
@@ -50,6 +56,7 @@ func (h *TodoHander) Read(
 			Status: todov1.Status(todo.Status),
 		},
 	})
+
 	res.Header().Set("Todo-Version", "v1")
 	return res, nil
 }
@@ -61,7 +68,7 @@ func (h *TodoHander) Update(
 	log.Println("Request headers: ", req.Header())
 	err := h.ser.UpdateTodo(ctx, req.Msg.Id, req.Msg.Title, int32(req.Msg.Status))
 	if err != nil {
-		return nil, err
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
 	}
 	res := connect.NewResponse(&todov1.UpdateResponse{})
 	res.Header().Set("Todo-Version", "v1")
@@ -75,7 +82,7 @@ func (h *TodoHander) Delete(
 	log.Println("Request headers: ", req.Header())
 	err := h.ser.DeleteTodo(ctx, req.Msg.Id)
 	if err != nil {
-		return nil, err
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
 	}
 
 	res := connect.NewResponse(&todov1.DeleteResponse{})
@@ -90,7 +97,7 @@ func (h *TodoHander) List(
 	log.Println("Request headers: ", req.Header())
 	todos, err := h.ser.GetTodoList(ctx)
 	if err != nil {
-		return nil, err
+		return nil, connect.NewError(connect.CodeUnknown, err)
 	}
 
 	grpcTodos := make([]*todov1.Todo, 0)
