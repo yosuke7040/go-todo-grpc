@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+// import "google/protobuf/timestamp.proto";
+
+package chat.v1;
+option go_package = "github.com/yosuke7040/go-todo-grpc/gen/chat/v1;chatv1";
+
+// service ChatService {
+//   rpc GetMessages (google.protobuf.Empty) returns (stream MessageResponse) {}
+//   rpc CreateMessage (MessageRequest) returns (MessageResponse) {}
+// }
+
+// message MessageRequest {
+//   string message = 1;
+// }
+
+// message MessageResponse {
+//   string message = 1;
+// }
+
+
+// RPCをまとめて一括りにしたものをサービスとして定義
+service ChatService {
+  rpc GetMessageStream (GetMessageStreamRequest) returns (stream GetMessageStreamResponse) {};
+  // rpc GetMessageStream (google.protobuf.Empty) returns (stream GetMessageStreamResponse) {};
+  rpc CreateMessage (CreateMessageRequest) returns (CreateMessageResponse) {};
+}
+
+message Message {
+  string from = 1; // 誰からのメッセージか
+  string message_content = 2; // メッセージ内容
+  // google.protobuf.Timestamp created_at = 3; // 作成日時
+}
+
+message GetMessageStreamRequest {
+  google.protobuf.Empty empty = 1;
+}
+
+message GetMessageStreamResponse {
+  Message message = 1;
+}
+
+message CreateMessageRequest {
+  Message message = 1;
+}
+
+message CreateMessageResponse {
+  string result = 1;
+}

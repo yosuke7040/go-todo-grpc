@@ -9,6 +9,13 @@
 ディレクトリ構成
 <https://go.dev/doc/modules/layout>
 
+buf
+
+```bash
+buf lint
+buf generate
+```
+
 リクエスト
 
 ```bash
@@ -74,3 +81,11 @@ sample user
 
 - <email@example.com>
 - p@ssw0rd
+
+memo
+
+> gRPC-Web では今のところ Client streaming と Bidirectional streaming ができません。
+> Bidirectional streaming を行おうとすると、サーバからの Stream は問題ありませんが、クライアントからの二回目以降の送信ではブラウザのコンソールにエラーが出力されます。
+> Server streaming 相当の動作にしかならないということだと思われます。
+
+<https://qiita.com/kabochapo/items/6848457ea7a966baf957#bidirectional-streaming-rpc-%E3%81%AE%E4%BE%8B>

@@ -45,7 +45,10 @@ func NewAuthInterceptor(auth0_url string, audience string) connect.UnaryIntercep
 			}
 
 			claims := make(map[string]interface{})
-			validator.Claims(parsedToken, &claims)
+			if err := validator.Claims(parsedToken, &claims); err != nil {
+				return nil, connect.NewError(connect.CodeUnauthenticated, err)
+			}
+			fmt.Println("--------------------------")
 			fmt.Println("claims: ", claims)
 
 			// TODO: contextにユーザーIDをセットする？
