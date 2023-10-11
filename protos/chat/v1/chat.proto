@@ -25,26 +25,38 @@ service ChatService {
   rpc GetMessageStream (GetMessageStreamRequest) returns (stream GetMessageStreamResponse) {};
   // rpc GetMessageStream (google.protobuf.Empty) returns (stream GetMessageStreamResponse) {};
   rpc CreateMessage (CreateMessageRequest) returns (CreateMessageResponse) {};
+  rpc ChatMessageStream (stream ChatMessageStreamRequest) returns (stream ChatMessageStreamResponse) {};
 }
 
-message Message {
-  string from = 1; // 誰からのメッセージか
-  string message_content = 2; // メッセージ内容
-  // google.protobuf.Timestamp created_at = 3; // 作成日時
-}
+// message Message {
+//   string from = 1; // 誰からのメッセージか
+//   string message_content = 2; // メッセージ内容
+//   // google.protobuf.Timestamp created_at = 3; // 作成日時
+// }
 
 message GetMessageStreamRequest {
   google.protobuf.Empty empty = 1;
 }
 
 message GetMessageStreamResponse {
-  Message message = 1;
+  string message = 1;
+  // Message message = 1;
 }
 
 message CreateMessageRequest {
-  Message message = 1;
+  string message = 1;
+  // Message message = 1;
 }
 
 message CreateMessageResponse {
   string result = 1;
+}
+
+message ChatMessageStreamRequest {
+  string message = 1;
+}
+
+message ChatMessageStreamResponse {
+  string message = 1;
+  // Message message = 1;
 }

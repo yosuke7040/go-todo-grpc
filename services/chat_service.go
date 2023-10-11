@@ -1,11 +1,16 @@
 package services
 
 // import (
-// 	"github.com/golang/protobuf/ptypes/empty"
-// 	pb "github.com/yosuke7040/go-todo-grpc/gen/chat/v1"
+// 	"connectrpc.com/connect"
+// 	chatv1 "github.com/yosuke7040/go-todo-grpc/gen/chat/v1"
 // )
 
-// type ChatService struct{}
+// type ChatServiceInterface interface {
+// }
+
+// type ChatService struct {
+// 	requests []*string
+// }
 
 // func NewChatService() *ChatService {
 // 	return &ChatService{}
@@ -15,9 +20,15 @@ package services
 // // 	log.Printf("Received: %v", r.GetMessageStream(ctx))
 // // }
 
-// func (s *ChatService) GetMessages(
-// 	ctx context.Context,
-// 	stream *connect.C
+// func (s *ChatService) Converse(
+// 	// ctx context.Context,
+// 	stream *connect.ServerStream[chatv1.GetMessageStreamResponse],
 // ) error {
-// 	for _, r := range s.
+// 	for _, r := range s.requests {
+// 		if err := stream.Send(&chatv1.GetMessageStreamResponse{Message: *r}); err != nil {
+// 			return err
+// 		}
+// 	}
+
+// 	previousCount := len(s.requests)
 // }

@@ -10,6 +10,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
+	"github.com/yosuke7040/go-todo-grpc/gen/chat/v1/chatv1connect"
 	"github.com/yosuke7040/go-todo-grpc/gen/eliza/v1/elizav1connect"
 	"github.com/yosuke7040/go-todo-grpc/gen/todo/v1/todov1connect"
 	"github.com/yosuke7040/go-todo-grpc/gen/user/v1/userv1connect"
@@ -66,8 +67,8 @@ func run() error {
 
 	todoHandler := handler.NewTodoHandler(tSer)
 	userHandler := handler.NewUserHandler(uSer)
-	// chatHandler := handler.NewChatHandler(cSer)
-	elizaHandler := handler.NewElizaHandler(eSer, 1*time.Second)
+	chatHandler := handler.NewChatHandler()
+	elizaHandler := handler.NewElizaHandler(eSer, 5*time.Second)
 
 	// authInterceptor := connect.WithInterceptors(interceptor.NewAuthInterceptor(url, audience))
 	// fmt.Println(authInterceptor)
@@ -76,7 +77,7 @@ func run() error {
 	// mux.Handle(auth_v1connect.NewAuthServiceHandler(authServer))
 	mux.Handle(userv1connect.NewUserServiceHandler(userHandler))
 	mux.Handle(todov1connect.NewTodoServiceHandler(todoHandler))
-	// mux.Handle(todov1connect.NewTodoServiceHandler(chatHandler))
+	mux.Handle(chatv1connect.NewChatServiceHandler(chatHandler))
 	// mux.Handle(todov1connect.NewTodoServiceHandler(todoHandler, authInterceptor))
 	mux.Handle(elizav1connect.NewElizaServiceHandler(elizaHandler, compress1KB))
 

@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ChatService_GetMessageStream_FullMethodName = "/chat.v1.ChatService/GetMessageStream"
-	ChatService_CreateMessage_FullMethodName    = "/chat.v1.ChatService/CreateMessage"
+	ChatService_GetMessageStream_FullMethodName  = "/chat.v1.ChatService/GetMessageStream"
+	ChatService_CreateMessage_FullMethodName     = "/chat.v1.ChatService/CreateMessage"
+	ChatService_ChatMessageStream_FullMethodName = "/chat.v1.ChatService/ChatMessageStream"
 )
 
 // ChatServiceClient is the client API for ChatService service.
@@ -30,6 +31,7 @@ type ChatServiceClient interface {
 	GetMessageStream(ctx context.Context, in *GetMessageStreamRequest, opts ...grpc.CallOption) (ChatService_GetMessageStreamClient, error)
 	// rpc GetMessageStream (google.protobuf.Empty) returns (stream GetMessageStreamResponse) {};
 	CreateMessage(ctx context.Context, in *CreateMessageRequest, opts ...grpc.CallOption) (*CreateMessageResponse, error)
+	ChatMessageStream(ctx context.Context, opts ...grpc.CallOption) (ChatService_ChatMessageStreamClient, error)
 }
 
 type chatServiceClient struct {
@@ -81,6 +83,37 @@ func (c *chatServiceClient) CreateMessage(ctx context.Context, in *CreateMessage
 	return out, nil
 }
 
+func (c *chatServiceClient) ChatMessageStream(ctx context.Context, opts ...grpc.CallOption) (ChatService_ChatMessageStreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ChatService_ServiceDesc.Streams[1], ChatService_ChatMessageStream_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &chatServiceChatMessageStreamClient{stream}
+	return x, nil
+}
+
+type ChatService_ChatMessageStreamClient interface {
+	Send(*ChatMessageStreamRequest) error
+	Recv() (*ChatMessageStreamResponse, error)
+	grpc.ClientStream
+}
+
+type chatServiceChatMessageStreamClient struct {
+	grpc.ClientStream
+}
+
+func (x *chatServiceChatMessageStreamClient) Send(m *ChatMessageStreamRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *chatServiceChatMessageStreamClient) Recv() (*ChatMessageStreamResponse, error) {
+	m := new(ChatMessageStreamResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // ChatServiceServer is the server API for ChatService service.
 // All implementations must embed UnimplementedChatServiceServer
 // for forward compatibility
@@ -88,6 +121,7 @@ type ChatServiceServer interface {
 	GetMessageStream(*GetMessageStreamRequest, ChatService_GetMessageStreamServer) error
 	// rpc GetMessageStream (google.protobuf.Empty) returns (stream GetMessageStreamResponse) {};
 	CreateMessage(context.Context, *CreateMessageRequest) (*CreateMessageResponse, error)
+	ChatMessageStream(ChatService_ChatMessageStreamServer) error
 	mustEmbedUnimplementedChatServiceServer()
 }
 
@@ -100,6 +134,9 @@ func (UnimplementedChatServiceServer) GetMessageStream(*GetMessageStreamRequest,
 }
 func (UnimplementedChatServiceServer) CreateMessage(context.Context, *CreateMessageRequest) (*CreateMessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateMessage not implemented")
+}
+func (UnimplementedChatServiceServer) ChatMessageStream(ChatService_ChatMessageStreamServer) error {
+	return status.Errorf(codes.Unimplemented, "method ChatMessageStream not implemented")
 }
 func (UnimplementedChatServiceServer) mustEmbedUnimplementedChatServiceServer() {}
 
@@ -153,6 +190,32 @@ func _ChatService_CreateMessage_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ChatService_ChatMessageStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ChatServiceServer).ChatMessageStream(&chatServiceChatMessageStreamServer{stream})
+}
+
+type ChatService_ChatMessageStreamServer interface {
+	Send(*ChatMessageStreamResponse) error
+	Recv() (*ChatMessageStreamRequest, error)
+	grpc.ServerStream
+}
+
+type chatServiceChatMessageStreamServer struct {
+	grpc.ServerStream
+}
+
+func (x *chatServiceChatMessageStreamServer) Send(m *ChatMessageStreamResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *chatServiceChatMessageStreamServer) Recv() (*ChatMessageStreamRequest, error) {
+	m := new(ChatMessageStreamRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // ChatService_ServiceDesc is the grpc.ServiceDesc for ChatService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +233,12 @@ var ChatService_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "GetMessageStream",
 			Handler:       _ChatService_GetMessageStream_Handler,
 			ServerStreams: true,
+		},
+		{
+			StreamName:    "ChatMessageStream",
+			Handler:       _ChatService_ChatMessageStream_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "chat/v1/chat.proto",
